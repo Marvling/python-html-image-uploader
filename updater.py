@@ -107,29 +107,34 @@ def generate_new_html(html_file, number_of_images_on_page, number_of_images_on_d
     # Creating a master list to itterate
     tags = list_of_tags_to_add
 
-
     # Finding the divs for insertion
     with open(html_file, "r") as file:
-        soup = BeautifulSoup(file, 'html.parser')    
+        soup = BeautifulSoup(file, 'html.parser')
 
-        while len(tags) != 0:
-            # Find empty div
-            for i in range(1, int(number_of_divs - (len(tags)/number_of_images_on_div)) +1):
-                tag_checked = soup.find(id=f"row-{i}")
+        # Find empty div
+        for i in range(1, 12):
+            tag_checked = soup.find(id=f"row-{i}")
 
-                # Set the div as tag_empty
-                if len(tag_checked.contents) < 3:
-                    tag_empty = tag_checked
-            
+            # Fill the div until it has desired number of images
+            while len(tag_checked.contents) < number_of_images_on_div:
+                
+                if tags:
                     # Insert the a tag into the empty tag
-                    print("\n")
-                    print(tag_empty)
-                    tag_empty.insert(0,tags[-1])
+                    tag_checked.insert(0,tags[-1])
 
                     # Remove the inserted tag from the master list
                     tags.pop()
-    
-    return soup
+                    print(tag_checked.prettify)
+                    print("\n")
+                else:
+                    break
+                        
+        return soup
+
+def owerite_html(old_html_file, new_html_file):
+
+    with open(old_html_file, "w") as file:
+        file.write(str(new_html_file))
 
 # Local directory
 dir_local = "../../testdir"
@@ -149,5 +154,5 @@ tags_to_add = generate_tags_to_insert(dir_files_moved, html_file)
 
 new_html = generate_new_html(html_file, images_page, images_div, tags_to_add)
 
-print(new_html.prettify())
+owerite_html(html_file, new_html)
 # %%
